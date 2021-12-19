@@ -1,0 +1,9 @@
+use_depth: false # false for RGB images and true for RGB-D images
+
+# add upto 4 images paths here (do take care of sizes. Final image would be very large if images are skewed)
+fname_images:
+  - 'dataset/I3/3_3.JPG'
+  - 'dataset/I3/3_4.JPG'
+  - 'dataset/I3/3_5.JPG'
+
+save_path: out
