@@ -1,5 +1,31 @@
 import numpy as np
 from tqdm import tqdm
+import cv2
+
+# Keypoints matching
+def keypoints_matcher(f1, f2):
+    matcher = cv2.BFMatcher(cv2.NORM_HAMMING)
+    raw_matches = matcher.knnMatch(f1, f2, 2)
+    final_matches = []
+    RATIO = 0.7
+    for (m1, m2) in raw_matches:
+        if m1.distance < m2.distance * RATIO:
+            final_matches.append(m1)
+    return final_matches
+
+
+def show_matches(img1, kp1, img2, kp2, matches):
+    img12 = cv2.drawMatches(
+        img1,
+        kp1,
+        img2,
+        kp2,
+        np.random.choice(matches, 20),
+        None,
+        flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS,
+    )
+    cv2.imshow(img12)
+
 
 def find_T_matrix(img_size):
     """

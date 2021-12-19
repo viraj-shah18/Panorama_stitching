@@ -1,37 +1,10 @@
 import cv2
 import numpy as np
 from tqdm import tqdm
-from utils import ransac
-
-# import imutils
-
-# Keypoints matching
-def keypoints_matcher(f1, f2):
-    matcher = cv2.BFMatcher(cv2.NORM_HAMMING)
-    raw_matches = matcher.knnMatch(f1, f2, 2)
-    final_matches = []
-    RATIO = 0.7
-    for (m1, m2) in raw_matches:
-        if m1.distance < m2.distance * RATIO:
-            final_matches.append(m1)
-    return final_matches
-
-
-def show_matches(img1, kp1, img2, kp2, matches):
-    img12 = cv2.drawMatches(
-        img1,
-        kp1,
-        img2,
-        kp2,
-        np.random.choice(matches, 20),
-        None,
-        flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS,
-    )
-    cv2.imshow(img12)
-
+from utils import ransac, keypoints_matcher
 
 # finding the points
-def find_pts(img1, img2, kp1, kp2, m12):
+def find_pts(kp1, kp2, m12):
     """
     extracting the matched points
 
@@ -181,7 +154,7 @@ def warp_blend2(image1, image2, H):
     return np.uint8(img3)
 
 
-def stitch(img1, img2, max_iter=500, threshold=5.0):
+def stitch(img1, img2, max_iter=400, threshold=5.0, **kwargs):
     """
     All the functions to create a main stiching function
     """
@@ -192,7 +165,7 @@ def stitch(img1, img2, max_iter=500, threshold=5.0):
     m12 = keypoints_matcher(f1, f2)
     # print(len(m12))
     # show_matches(img1, kp1, img2, kp2, m12)
-    ipts1, ipts2 = find_pts(img1, img2, kp1, kp2, m12)
+    ipts1, ipts2 = find_pts(kp1, kp2, m12)
     H = ransac(ipts1, ipts2, img_size, max_iter, threshold)
     img3 = warp_blend2(img1, img2, np.linalg.inv(H))
     return img3

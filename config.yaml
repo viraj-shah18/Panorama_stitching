@@ -1,9 +1,19 @@
-use_depth: false # false for RGB images and true for RGB-D images
-
-# add upto 4 images paths here (do take care of sizes. Final image would be very large if images are skewed)
-fname_images:
-  - 'dataset/I3/3_3.JPG'
-  - 'dataset/I3/3_4.JPG'
-  - 'dataset/I3/3_5.JPG'
-
+use_depth: true
 save_path: out
+
+# --------------- RGB stitching config params ------------------------
+# add upto 4 images paths here for RGB images (do take care of sizes. Final image would be very large if images are skewed)
+fname_images:
+  - "dataset/I3/3_3.JPG"
+  - "dataset/I3/3_4.JPG"
+  - "dataset/I3/3_5.JPG"
+
+
+# --------------- RGB-D warping config params ------------------------
+src_image:
+  img_file: dataset/000000705/im_1.jpg
+  depth_file: dataset/000000705/depth_1.jpg
+
+ref_image:
+  img_file: dataset/000000705/im_0.jpg
+  depth_file: dataset/000000705/depth_0.jpg
